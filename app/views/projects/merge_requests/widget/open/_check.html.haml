@@ -1,0 +1,6 @@
+- content_for :page_specific_javascripts do
+  = page_specific_javascript_tag('merge_request_widget/ci_bundle.js')
+
+%strong
+  = icon("spinner spin")
+  正在检查自动合并&hellip;

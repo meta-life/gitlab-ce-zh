@@ -1,0 +1,79 @@
+.page-content-header
+  .header-main-content
+    %strong
+    = clipboard_button(clipboard_text: @commit.id)
+    = @commit.short_id
+    %span 由
+    = author_avatar(@commit, size: 24)
+    %strong
+      = commit_author_link(@commit, avatar: true, size: 24)
+    %span.hidden-xs 编写于
+    #{time_ago_with_tooltip(@commit.authored_date)}
+    - if @commit.different_committer?
+      %span.light 由
+      %strong
+        = commit_committer_link(@commit, avatar: true, size: 24)
+      %span.light 提交于
+      #{time_ago_with_tooltip(@commit.committed_date)}
+
+  .header-action-buttons
+    - if defined?(@notes_count) && @notes_count > 0
+      %span.btn.disabled.btn-grouped.hidden-xs.append-right-10
+        = icon('comment')
+        = @notes_count
+    = link_to namespace_project_tree_path(@project.namespace, @project, @commit), class: "btn btn-default append-right-10 hidden-xs hidden-sm" do
+      浏览文件
+    .dropdown.inline
+      %a.btn.btn-default.dropdown-toggle{ data: { toggle: "dropdown" } }
+        %span 选项
+        = icon('caret-down')
+      %ul.dropdown-menu.dropdown-menu-align-right
+        %li.visible-xs-block.visible-sm-block
+          = link_to namespace_project_tree_path(@project.namespace, @project, @commit) do
+            浏览文件
+        - unless @commit.has_been_reverted?(current_user)
+          %li.clearfix
+            = revert_commit_link(@commit, namespace_project_commit_path(@project.namespace, @project, @commit.id), has_tooltip: false)
+        %li.clearfix
+          = cherry_pick_commit_link(@commit, namespace_project_commit_path(@project.namespace, @project, @commit.id), has_tooltip: false)
+        %li.clearfix
+          = link_to "标签", new_namespace_project_tag_path(@project.namespace, @project, ref: @commit)
+        %li.divider
+        %li.dropdown-header
+          下载
+        - unless @commit.parents.length > 1
+          %li= link_to "电子邮件补丁", namespace_project_commit_path(@project.namespace, @project, @commit, format: :patch)
+        %li= link_to "差异文件",    namespace_project_commit_path(@project.namespace, @project, @commit, format: :diff)
+
+.commit-box
+  %h3.commit-title
+    = markdown(@commit.title, pipeline: :single_line, author: @commit.author)
+  - if @commit.description.present?
+    %pre.commit-description
+      = preserve(markdown(@commit.description, pipeline: :single_line, author: @commit.author))
+
+.info-well
+  .well-segment.branch-info
+    .icon-container.commit-icon
+      = custom_icon("icon_commit")
+    %span.cgray= pluralize(@commit.parents.count, "个父辈", "个父辈")
+    - @commit.parents.each do |parent|
+      = link_to parent.short_id, namespace_project_commit_path(@project.namespace, @project, parent), class: "monospace"
+    %span.commit-info.branches
+      %i.fa.fa-spinner.fa-spin
+
+  - if @commit.status
+    .well-segment.pipeline-info
+      %div{ class: "icon-container ci-status-icon-#{@commit.status}" }
+        = ci_icon_for_status(@commit.status)
+      提交
+      = link_to @commit.short_id, namespace_project_commit_path(@project.namespace, @project, @commit), class: "monospace"
+      的 流水线
+      = link_to "##{@commit.pipelines.last.id}", pipelines_namespace_project_commit_path(@project.namespace, @project, @commit.id), class: "monospace"
+      %span.ci-status-label
+        = ci_label_for_status(@commit.status)
+      于
+      = time_interval_in_words @commit.pipelines.total_duration
+
+:javascript
+  $(".commit-info.branches").load("#{branches_namespace_project_commit_path(@project.namespace, @project, @commit.id)}");

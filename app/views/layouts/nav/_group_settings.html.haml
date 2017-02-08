@@ -1,0 +1,18 @@
+- if current_user
+  - can_admin_group = can?(current_user, :admin_group, @group)
+  - can_edit = can?(current_user, :admin_group, @group)
+
+  - if can_admin_group || can_edit
+    .controls
+      .dropdown.group-settings-dropdown
+        %a.dropdown-new.btn.btn-default#group-settings-button{ href: '#', 'data-toggle' => 'dropdown' }
+          = icon('cog')
+          = icon('caret-down')
+        %ul.dropdown-menu.dropdown-menu-align-right
+          - if can_admin_group
+            = nav_link(path: 'groups#projects') do
+              = link_to '项目', projects_group_path(@group), title: '项目'
+          - if can_edit && can_admin_group
+            %li.divider
+            %li
+              = link_to '编辑群组', edit_group_path(@group)
