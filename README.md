@@ -60,7 +60,7 @@ sudo gitlab-rake gitlab:backup:create
 4.升级安装新的rpm包：
 
 ```
-sudo rpm -Uvh gitlab-ce-8.14.0-ce.0.el6.x86_64.rpm
+sudo rpm -Uvh gitlab-ce-8.16.4-ce.0.el6.x86_64.rpm
 ```
 
 5.执行配置命令。
