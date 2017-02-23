@@ -1,0 +1,7 @@
+- if @user.valid?
+  :plain
+    new Flash("用户名已成功修改", "notice")
+- else
+  - error = @user.errors.full_messages.first
+  :plain
+    new Flash("用户名修改失败 - #{escape_javascript error.html_safe}", "alert")

@@ -1,0 +1,30 @@
+- page_title "#{@domain.domain}", '网页域名'
+
+%h3.page-title
+  网页域名
+
+.table-holder
+  %table.table
+    %tr
+      %td
+        域名
+      %td
+        = link_to @domain.domain, @domain.url
+    %tr
+      %td
+        DNS
+      %td
+        %p
+          要访问域名，请创建新的DNS记录:
+        %pre
+          #{@domain.domain} CNAME #{@domain.project.namespace.path}.#{Settings.pages.host}.
+    %tr
+      %td
+        证书
+      %td
+        - if @domain.certificate_text
+          %pre
+            = @domain.certificate_text
+        - else
+          .light
+            丢失

@@ -1,0 +1,85 @@
+- form = local_assigns.fetch(:f)
+- commits = local_assigns[:commits]
+- project = @target_project || @project
+
+= form_errors(issuable)
+
+- if @conflict
+  .alert.alert-danger
+    有人与您同时编辑了 #{issuable.class.model_name.human.downcase} 这个问题，请检出
+    Please check out
+    = link_to "这个问题 #{issuable.class.model_name.human.downcase}", polymorphic_path([@project.namespace.becomes(Namespace), @project, issuable]), target: "_blank"
+    并确保您不会无意中删除了其他人的更改。
+
+.form-group
+  = form.label :title, '标题', class: 'control-label'
+
+  = render 'shared/issuable/form/template_selector', issuable: issuable
+  = render 'shared/issuable/form/title', issuable: issuable, form: form, has_wip_commits: commits && commits.detect(&:work_in_progress?)
+
+= render 'shared/issuable/form/description', issuable: issuable, form: form
+
+- if issuable.respond_to?(:confidential)
+  .form-group
+    .col-sm-offset-2.col-sm-10
+      .checkbox
+        = form.label :confidential do
+          = form.check_box :confidential
+          此问题是保密的，只对团队成员可见
+
+= render 'shared/issuable/form/metadata', issuable: issuable, form: form
+
+- if issuable.can_move?(current_user)
+  %hr
+  .form-group
+    = label_tag :move_to_project_id, '移动', class: 'control-label'
+    .col-sm-10
+      .issuable-form-select-holder
+        = hidden_field_tag :move_to_project_id, nil, class: 'js-move-dropdown', data: { placeholder: '选择项目', projects_url: autocomplete_projects_path(project_id: @project.id), page_size: MoveToProjectFinder::PAGE_SIZE }
+      &nbsp;
+      %span{ data: { toggle: 'tooltip', placement: 'auto top' }, style: 'cursor: default',
+      title: '移动问题将复制讨论到不同的项目并关闭此问题。所有参与者都会收到新位置的通知。' }
+        = icon('question-circle')
+
+= render 'shared/issuable/form/branch_chooser', issuable: issuable, form: form
+
+= render 'shared/issuable/form/merge_params', issuable: issuable
+
+- if @merge_request_for_resolving_discussions
+  .form-group
+    .col-sm-10.col-sm-offset-2
+      - if @merge_request_for_resolving_discussions.discussions_can_be_resolved_by?(current_user)
+        = icon('exclamation-triangle')
+        Creating this issue will mark all discussions in
+        = link_to @merge_request_for_resolving_discussions.to_reference, merge_request_path(@merge_request_for_resolving_discussions)
+        as resolved.
+        = hidden_field_tag 'merge_request_for_resolving_discussions', @merge_request_for_resolving_discussions.iid
+      - else
+        = icon('exclamation-triangle')
+        You can't automatically mark all discussions in
+        = link_to @merge_request_for_resolving_discussions.to_reference, merge_request_path(@merge_request_for_resolving_discussions)
+        as resolved. Ask someone with sufficient rights to resolve the them.
+
+- is_footer = !(issuable.is_a?(MergeRequest) && issuable.new_record?)
+.row-content-block{ class: (is_footer ? "footer-block" : "middle-block") }
+  - if issuable.new_record?
+    = form.submit "提交新的 #{issuable.zh_name}", class: 'btn btn-create'
+  - else
+    = form.submit '保存修改', class: 'btn btn-save'
+
+  - if !issuable.persisted? && !issuable.project.empty_repo? && (guide_url = contribution_guide_path(issuable.project))
+    .inline.prepend-left-10
+      请先阅读此项目的
+      %strong= link_to('贡献指南', guide_url)
+      。
+
+  - if issuable.new_record?
+    = link_to '取消', polymorphic_path([@project.namespace.becomes(Namespace), @project, issuable.class]), class: 'btn btn-cancel'
+  - else
+    .pull-right
+      - if can?(current_user, :"destroy_#{issuable.to_ability_name}", @project)
+        = link_to '删除', polymorphic_path([@project.namespace.becomes(Namespace), @project, issuable]), data: { confirm: "确认删除 #{issuable.human_class_name} ？" },
+                                                                                                  method: :delete, class: 'btn btn-danger btn-grouped'
+      = link_to '取消', polymorphic_path([@project.namespace.becomes(Namespace), @project, issuable]), class: 'btn btn-grouped btn-cancel'
+
+= form.hidden_field :lock_version
