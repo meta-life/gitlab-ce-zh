@@ -1,0 +1,17 @@
+= content_for :meta_tags do
+  = auto_discovery_link_tag(:atom, dashboard_projects_url(rss_url_options), title: "所有活动")
+
+- page_title    "项目"
+- header_title  "项目", dashboard_projects_path
+
+.user-callout{ 'callout-svg' => custom_icon('icon_customization') }
+- if @projects.any? || params[:name]
+  = render 'dashboard/projects_head'
+
+- if @last_push
+  = render "events/event_last_push", event: @last_push
+
+- if @projects.any? || params[:name]
+  = render 'projects'
+- else
+  = render "zero_authorized_projects"

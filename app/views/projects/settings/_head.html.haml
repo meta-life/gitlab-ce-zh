@@ -1,0 +1,33 @@
+= content_for :sub_nav do
+  .scrolling-tabs-container.sub-nav-scroll
+    = render 'shared/nav_scroll'
+    .nav-links.sub-nav.scrolling-tabs
+      %ul{ class: container_class }
+        - can_edit = can?(current_user, :admin_project, @project)
+        - if can_edit
+          = nav_link(controller: :projects) do
+            = link_to edit_project_path(@project), title: '常规' do
+              %span
+                常规
+        = nav_link(controller: :members) do
+          = link_to project_settings_members_path(@project), title: '成员' do
+            %span
+              成员
+        - if can_edit
+          = nav_link(controller: :integrations) do
+            = link_to project_settings_integrations_path(@project), title: '集成' do
+              %span
+                集成
+          = nav_link(controller: :repository) do
+            = link_to namespace_project_settings_repository_path(@project.namespace, @project), title: '版本库' do
+              %span
+                版本库
+          - if @project.feature_available?(:builds, current_user)
+            = nav_link(controller: :ci_cd) do
+              = link_to namespace_project_settings_ci_cd_path(@project.namespace, @project), title: 'CI/CD 流水线' do
+                %span
+                  CI/CD 流水线
+          = nav_link(controller: :pages) do
+            = link_to namespace_project_pages_path(@project.namespace, @project), title: '页面' do
+              %span
+                页面
