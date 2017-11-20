@@ -1,0 +1,23 @@
+- button_path = local_assigns.fetch(:button_path, false)
+- project_select_button = local_assigns.fetch(:project_select_button, false)
+- has_button = button_path || project_select_button
+
+.row.empty-state
+  .col-xs-12
+    .svg-content
+      = image_tag 'illustrations/issues.svg'
+  .col-xs-12.text-center
+    .text-content
+      - if has_button && current_user
+        %h4
+          问题跟踪器是用来添加项目中需要改进或解决的东西的地方。
+        %p
+          问题可以是要讨论的Bug，任务或概念。
+          此外，问题是可搜索、可过滤的。
+        - if project_select_button
+          = render 'shared/new_project_item_select', path: 'issues/new', label: '新建问题', type: :issues
+        - else
+          = link_to '新建问题', button_path, class: 'btn btn-new', title: '新建问题', id: 'new_issue_link'
+      - else
+        .text-center
+          %h4 没有问题可以显示。

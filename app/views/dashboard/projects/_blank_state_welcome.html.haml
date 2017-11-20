@@ -1,0 +1,46 @@
+- public_project_count = ProjectsFinder.new(current_user: current_user).execute.count
+
+- if current_user.can_create_group?
+  .blank-state
+    .blank-state-icon
+      = custom_icon("add_new_group", size: 50)
+    .blank-state-body
+      %h3.blank-state-title
+        创建一个存放多个相关项目的群组。
+      %p.blank-state-text
+        群组是管理项目和成员的最佳方式。
+      = link_to new_group_path, class: "btn btn-new" do
+        新建群组
+
+.blank-state
+  .blank-state-icon
+    = custom_icon("add_new_project", size: 50)
+  .blank-state-body
+    %h3.blank-state-title
+      创建一个项目
+    %p.blank-state-text
+      - if current_user.can_create_project?
+        你现在不能访问任何项目。
+        你可以最多创建
+        %strong= number_with_delimiter(current_user.projects_limit)
+        个项目。
+      - else
+        如果您加入了项目，它将会显示在这里。
+    - if current_user.can_create_project?
+      = link_to new_project_path, class: "btn btn-new" do
+        新建项目
+
+- if public_project_count > 0
+  .blank-state
+    .blank-state-icon
+      = custom_icon("globe", size: 50)
+    .blank-state-body
+      %h3.blank-state-title
+        浏览公共项目
+      %p.blank-state-text
+        此服务器上有
+        = number_with_delimiter(public_project_count)
+        个公开项目。
+        公开项目允许全部人都可以只读访问。
+      = link_to trending_explore_projects_path, class: "btn btn-new" do
+        浏览项目

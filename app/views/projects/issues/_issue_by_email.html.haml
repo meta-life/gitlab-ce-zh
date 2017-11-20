@@ -1,0 +1,34 @@
+.issues-footer.text-center
+  %button.issue-email-modal-btn{ type: "button", data: { toggle: "modal", target: "#issue-email-modal" } }
+    通过电子邮件向此项目发送新问题
+
+#issue-email-modal.modal.fade{ tabindex: "-1", role: "dialog" }
+  .modal-dialog{ role: "document" }
+    .modal-content
+      .modal-header
+        %button.close{ type: "button", data: { dismiss: "modal" }, aria: { label: "close" } }
+          %span{ aria: { hidden: "true" } }= icon("times")
+        %h4.modal-title
+          通过电子邮件创建新问题
+      .modal-body
+        %p
+          您可以通过向以下地址发送电子邮件来创建问题:
+        .email-modal-input-group.input-group
+          = text_field_tag :issue_email, email, class: "monospace js-select-on-focus form-control", readonly: true
+          .input-group-btn
+            = clipboard_button(target: '#issue_email')
+        %p
+          邮件主题将作为问题的标题, 问题描述则是邮件内容。
+          支持
+          = link_to 'Quick actions', help_page_path('user/project/quick_actions'), target: '_blank', tabindex: -1
+          和
+          = link_to 'Markdown', help_page_path('user/markdown'), target: '_blank', tabindex: -1
+          格式。
+
+        %p
+          这是一个专门为您创建的私人邮件地址。
+
+          如果该邮件地址被泄露，其他人就可以通过该邮件地址以您的身份创建问题。
+          一旦发现邮件地址被泄露，您可以点击
+          = link_to '复位', new_issue_address_project_path(@project), class: 'incoming-email-token-reset'
+          来重置该邮件地址。

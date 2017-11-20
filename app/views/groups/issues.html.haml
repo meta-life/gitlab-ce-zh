@@ -1,0 +1,31 @@
+- page_title "问题"
+- group_issues_exists = group_issues(@group).exists?
+= content_for :meta_tags do
+  = auto_discovery_link_tag(:atom, params.merge(rss_url_options), title: "#{@group.name} 问题")
+
+- content_for :page_specific_javascripts do
+  = webpack_bundle_tag 'common_vue'
+  = webpack_bundle_tag 'filtered_search'
+
+- if group_issues_exists
+  .top-area
+    = render 'shared/issuable/nav', type: :issues
+    .nav-controls
+      = link_to params.merge(rss_url_options), class: 'btn' do
+        = icon('rss')
+        %span.icon-label
+          Subscribe
+      = render 'shared/new_project_item_select', path: 'issues/new', label: "新建问题", type: :issues
+
+  = render 'shared/issuable/search_bar', type: :issues
+
+  .row-content-block.second-block
+    只显示来自
+    %strong= @group.name
+    群组的问题。
+    - if current_user
+      请到 #{link_to '仪表盘', issues_dashboard_path} 页面查看全部问题。
+
+  = render 'shared/issues'
+- else
+  = render 'shared/empty_states/issues', project_select_button: true
