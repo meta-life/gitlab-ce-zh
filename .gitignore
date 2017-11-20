@@ -1,0 +1,62 @@
+# 不受版本控制文件清单
+# 日志
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 运行时数据
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# 库文件生成目录
+lib-cov
+
+# 覆盖目录工具
+coverage
+
+# 测试覆盖输出文件
+.nyc_output
+
+# Grunt中间存储数据 (http://gruntjs.com/creating-plugins#storing-task-files)
+.grunt
+
+# Bower依赖目录 (https://bower.io/)
+bower_components
+
+# node配置文件
+.lock-wscript
+
+# 编译二进制文件 (http://nodejs.org/api/addons.html)
+build/Release
+
+# 依赖文件目录
+node_modules/
+jspm_packages/
+
+# Typescript声明文件
+typings/
+
+# npm缓存配置目录
+.npm
+
+# 配置eslint缓存
+.eslintcache
+
+# 配置REPL历史
+.node_repl_history
+
+# 打包生成文件
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# dotenv环境变量配置文件
+.env
+
+# 私有配置文件
+.vscode
