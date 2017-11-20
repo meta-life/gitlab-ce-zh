@@ -88,16 +88,16 @@ sudo gitlab-ctl stop
     
 4. 将解压后的汉化包覆盖服务器上的/opt/gitlab/embedded/service/gitlab-rails目录。
 
-5. 启动Gitlab服务。
-
-```
-sudo gitlab-ctl start
-```
-
-6. 重新执行配置命令。
+5. 重新执行配置命令。
 
 ```
 sudo gitlab-ctl reconfigure
+```
+
+5. 重启Gitlab服务。
+
+```
+sudo gitlab-ctl restart
 ```
 
 完成上述步骤即实现汉化。
