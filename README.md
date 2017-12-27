@@ -21,14 +21,14 @@ sudo systemctl start postfix
 
 [下载页面](https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/)
 
-[下载地址](https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-10.1.4-ce.0.el7.x86_64.rpm)
+[下载地址](https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-10.3.0-ce.0.el7.x86_64.rpm)
 
 3. 在服务器上的下载安装包，并执行安装命令。比如：10.1.4版本
 
 ```
-wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-10.1.4-ce.0.el7.x86_64.rpm
+wget https://mirrors.tuna.tsinghua.edu.cn/gitlab-ce/yum/el7/gitlab-ce-10.3.0-ce.0.el7.x86_64.rpm
 
-sudo rpm -i gitlab-ce-10.1.4-ce.0.el7.x86_64.rpm
+sudo rpm -i gitlab-ce-10.3.0-ce.0.el7.x86_64.rpm
 ```
 
 4. 执行配置命令。
@@ -61,7 +61,7 @@ sudo gitlab-rake gitlab:backup:create
 4. 升级安装新的rpm包：
 
 ```
-sudo rpm -Uvh gitlab-ce-10.1.4-ce.0.el7.x86_64.rpm
+sudo rpm -Uvh gitlab-ce-10.3.0-ce.0.el7.x86_64.rpm
 ```
 
 5. 执行配置命令。
@@ -112,4 +112,4 @@ sudo rpm -qa | grep gitlab
 
 2. 使用yum方法卸载当前安装版本
 
-sudo rpm -e gitlab-ce-10.1.4-ce.0.el7.x86_64.rpm
+sudo rpm -e gitlab-ce-10.3.0-ce.0.el7.x86_64.rpm
